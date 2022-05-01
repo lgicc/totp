@@ -1,6 +1,6 @@
 # TOTP
 
-###Generate Random Secret.  
+### Generate Random Secret.  
 
 *Default length is 20*
 ```javascript
@@ -14,7 +14,7 @@
 ```
   
 
-###Convert manual to Base32.  
+### Convert manual to Base32.  
 
 *To support Google Authenticator*
 ```javascript
@@ -29,7 +29,7 @@
 ```
   
 
-###Generate TOTP
+### Generate TOTP
 
 ```javascript
     import {TOTP} from '@lgicc/totp';
