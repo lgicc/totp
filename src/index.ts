@@ -15,18 +15,21 @@ export class TOTP {
         length: 6 // length of the token
     }
 
+    private _secret: string;
+
     get options(): TOTPOptions {
         return this._options;
     }
 
-    constructor(options: TOTPOptions) {
+    constructor(secret: string, options: TOTPOptions) {
         this._options = {...options};
+        this._secret = secret;
     }
 
-    generate(secret: string) {
+    generate() {
         const epoch = Math.round(Date.now() / 1000);
         const time = Math.floor(epoch / this.options.period).toString(16).toString().padStart(16, '0');
-        const hmac = createHmac(this.options.algorithm, Buffer.from(thirtytwo.decode(thirtytwo.encode(secret)).toString('hex'), 'hex'));
+        const hmac = createHmac(this.options.algorithm, Buffer.from(thirtytwo.decode(this._secret).toString('hex'), 'hex'));
         hmac.update(time, 'hex');
         const digest = hmac.digest('hex');
         const offset = hex2dec(digest.substring(digest.length - 1));
@@ -35,7 +38,7 @@ export class TOTP {
         return otp;
     }
 
-    verify(code, secret) {
-        return this.generate(secret) === code;
+    verify(code) {
+        return this.generate() === code;
     }
 }
