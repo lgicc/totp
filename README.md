@@ -7,6 +7,7 @@
     import {generateSecret} from '@lgicc/totp';
 
     // Generate Secret with Default length of 20
+    // Automatically converted to base32
     const secret = generateSecret();
 
     // Generate Secret with custom length
@@ -21,7 +22,7 @@
     import {generateSecret} from '@lgicc/totp';
     import {toBase32} from '@lgicc/totp';
     
-    // Convert to secret without automatic base32 convertion
+    // Generate secret without automatic base32 convertion
     const secretNoBase32 = generateSecret(20, false);
 
     // Convert to secret to base32 manually
@@ -38,8 +39,8 @@
     // Generate Secret with Default Length of 20
     const secret = generateSecret();
 
-    const totp = new TOTP();
-    console.log(totp.generate(secret));
+    const totp = new TOTP(secret);
+    console.log(totp.generate());
 
     // Verify TOTP
     console.log(totp.verify('000000')); // inject your code instead of 000000
