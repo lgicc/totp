@@ -21,8 +21,11 @@ export class TOTP {
         return this._options;
     }
 
-    constructor(secret: string, options: TOTPOptions) {
-        this._options = {...options};
+    constructor(secret: string, options?: TOTPOptions) {
+        if(typeof options === 'object') {
+            this._options = {...this._options, ...options};
+        }
+        
         this._secret = secret;
     }
 
