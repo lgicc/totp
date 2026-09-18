@@ -1,8 +1,10 @@
 
-import { createHmac, randomBytes } from 'crypto';
+import { createHmac } from 'crypto';
 import * as thirtytwo from 'thirty-two';
 import { TOTPOptions } from './totp-options';
 
+export { generateSecret } from './generate-secret';
+export { toBase32 } from './toBase32';
 
 function hex2dec(hex: string): number {
     return Number(`0x${hex}`);
@@ -29,19 +31,29 @@ export class TOTP {
         this._secret = secret;
     }
 
-    generate() {
-        const epoch = Math.round(Date.now() / 1000);
-        const time = Math.floor(epoch / this.options.period).toString(16).toString().padStart(16, '0');
+    generateAt(epochSeconds: number): string {
+        const time = Math.floor(epochSeconds / this.options.period).toString(16).padStart(16, '0');
         const hmac = createHmac(this.options.algorithm, Buffer.from(thirtytwo.decode(this._secret).toString('hex'), 'hex'));
         hmac.update(time, 'hex');
         const digest = hmac.digest('hex');
         const offset = hex2dec(digest.substring(digest.length - 1));
         let otp = (hex2dec(digest.substring(offset * 2, offset * 2 + 8)) & hex2dec("7fffffff")) + "";
-        otp = otp.substring(Math.max(otp.length - this.options.length, 0), Math.max(otp.length - this.options.length, 0) + this.options.length);
-        return otp;
+        otp = otp.substring(Math.max(otp.length - this.options.length, 0));
+        return otp.padStart(this.options.length, '0');
     }
 
-    verify(code) {
-        return this.generate() === code;
+    generate(): string {
+        return this.generateAt(Math.round(Date.now() / 1000));
+    }
+
+    verify(code: string, skew = 1): boolean {
+        const epoch = Math.round(Date.now() / 1000);
+        for (let i = -skew; i <= skew; i++) {
+            const counter = epoch + i * this.options.period;
+            if (this.generateAt(counter) === code) {
+                return true;
+            }
+        }
+        return false;
     }
 }
