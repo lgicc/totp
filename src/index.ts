@@ -31,8 +31,8 @@ export class TOTP {
         this._secret = secret;
     }
 
-    generateAt(counter: number): string {
-        const time = Math.floor(counter / this.options.period).toString(16).padStart(16, '0');
+    generateAt(epochSeconds: number): string {
+        const time = Math.floor(epochSeconds / this.options.period).toString(16).padStart(16, '0');
         const hmac = createHmac(this.options.algorithm, Buffer.from(thirtytwo.decode(this._secret).toString('hex'), 'hex'));
         hmac.update(time, 'hex');
         const digest = hmac.digest('hex');

@@ -58,6 +58,6 @@ test('TOTP verify with skew=0 still matches current code', () => {
 test('TOTP generateAt is deterministic', () => {
     const secret = generateSecret();
     const totp = new TOTP(secret);
-    const counter = 1700000000;
-    assert.equal(totp.generateAt(counter), totp.generateAt(counter));
+    const epochSeconds = 1700000000;
+    assert.equal(totp.generateAt(epochSeconds), totp.generateAt(epochSeconds));
 });
