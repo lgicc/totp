@@ -10,16 +10,18 @@
   "scripts": {
     "pub": "npx tsc && copy package.json lib && copy README.md lib && npm publish ./lib",
     "build": "npx tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx tsc && node --test lib/index.test.js"
   },
-  "keywords": ["totp"],
+  "keywords": [
+    "totp"
+  ],
   "author": "Daniel Amzovski",
   "license": "MIT",
   "dependencies": {
     "thirty-two": "^1.0.2"
   },
   "devDependencies": {
-    "@types/node": "^16.0.0",
-    "typescript": "^4.6.4"
+    "@types/node": "^18.19.130",
+    "typescript": "^5.9.3"
   }
 }
